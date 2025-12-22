@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>O Detetive Desajeitado</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font-family: sans-serif; background:#020617; color:#e5e7eb; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
+.container { width:90%; max-width:420px; }
+.card { background:#111827; border-radius:16px; padding:20px; }
+.question { margin:15px 0; text-align:center; font-size:1.1rem; }
+input, button { width:100%; padding:12px; border-radius:10px; border:none; margin-bottom:10px; box-sizing:border-box; }
+button { background:#22c55e; font-weight:600; cursor:pointer; }
+.feedback { margin-top:10px; text-align:center; font-weight:bold; }
+.feedback.error { color:#ef4444; }
+.feedback.success { color:#22c55e; }
+.timer { text-align:center; margin:10px 0; font-weight:bold; color:#22c55e; }
+.timer.warning { color:#f59e0b; }
+.clue { background:#022c22; padding:10px; border-left:4px solid #22c55e; margin-top:10px; border-radius:8px;}
+img { width:100%; border-radius:12px; margin:10px 0;}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h1 id="title"></h1>
+    <div id="game"></div>
+  </div>
+</div>
+
+<script>
+const gameData = {
+  "title":"O Detetive Desajeitado",
+  "final_message":"Decifra o Código abaixo para descobrires o Amigo Secreto!",
+  "time_limit":25,
+  "questions":[
+    {"question":"Quem sou eu? (2 palavras)","answer":"tiger woods","clue":"Pista 1: Rochedo","image":"tigerwoods.png"},
+    {"question":"Todas as grandes marcas de automóveis estão-se a focar em motores...","answer":"eletricos","clue":"Pista 2: Antártica","image":"carro.png"},
+    {"question":"Qual a cor normalmente associada às plantas, ao ambiente e à natureza?","answer":"verde","clue":"Pista 2: Monte Sinai","image":"nature.png"},
+    {"question":"Que serie de filmes ficou conhecido...? (3 palavras)","answer":"academia de policia","clue":"Pista 2: Lavrar","image":"policeacademy.jpg"},
+    {"question":"Na idade media, que bebida era considerada mais segura de beber que a água? (3 palavras)","answer":"cerveja","clue":"Pista 2: Também","image":"wc.jpg"}
+
+  ]
+};
+
+let current=0;
+let clues=[];
+let timer=null;
+let timeLeft=gameData.time_limit;
+
+const titleEl=document.getElementById("title");
+const gameEl=document.getElementById("game");
+titleEl.textContent=gameData.title;
+
+function startTimer(){
+  clearInterval(timer);
+  timeLeft=gameData.time_limit;
+  timer=setInterval(()=>{
+    const timerEl=document.getElementById("timer");
+    if(!timerEl) return;
+    timerEl.textContent=`⏱ ${timeLeft}s`;
+    if(timeLeft<=5) timerEl.classList.add("warning");
+    if(timeLeft<=0){clearInterval(timer); failQuestion();}
+    timeLeft--;
+  },1000);
+}
+
+function showQuestion(){
+  if(current>=gameData.questions.length){showFinal(); return;}
+  const q=gameData.questions[current];
+  gameEl.innerHTML=`
+    <div class="timer" id="timer">⏱ ${timeLeft}s</div>
+    <div class="question">${q.question}</div>
+    ${q.image ? `<img src="${q.image}" alt="Pista visual">` : ""}
+    <input id="answer" placeholder="Digite sua resposta..." autocomplete="off">
+    <button id="submitBtn">Enviar</button>
+    <div id="feedback" class="feedback"></div>
+  `;
+  document.getElementById("submitBtn").onclick=checkAnswer;
+  startTimer();
+  document.getElementById("answer").focus();
+}
+
+function checkAnswer(){
+  const input=document.getElementById("answer").value.trim().toLowerCase();
+  const correct=gameData.questions[current].answer.toLowerCase();
+  const feedback=document.getElementById("feedback");
+  if(!input) return;
+  if(input===correct){
+    clearInterval(timer);
+    feedback.textContent="✅ Correto!";
+    feedback.className="feedback success";
+    clues.push(gameData.questions[current].clue);
+    setTimeout(()=>{current++; showQuestion();},600);
+  }else{
+    feedback.textContent="❌ Errado! Tente novamente.";
+    feedback.className="feedback error";
+  }
+}
+
+function failQuestion(){
+  gameEl.innerHTML=`<div class="question">⏰ Tempo esgotado!</div>
+  <button onclick="showQuestion()">Tente novamente</button>`;
+}
+
+function showFinal(){
+  gameEl.innerHTML=`<div class="question">🎉 Jogo concluído!</div>
+  <p>${gameData.final_message}</p>
+  ${clues.map(c=>`<div class="clue">${c}</div>`).join('')}`;
+}
+
+showQuestion();
+</script>
+</body>
+</html>

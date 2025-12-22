@@ -1,0 +1,43 @@
+{
+  "title": "The Mystery Challenge",
+  "final_message": "Combine the clues to reveal the final answer.",
+  "time_limit": 20,
+  "questions": [
+    {
+      "question": "What has keys but can't open locks?",
+      "answer": "keyboard",
+      "clue": "Clue 1: Atrasado",
+      "image": "keyboard.png"
+    },
+    {
+      "question": "What speaks without a mouth and hears without ears?",
+      "answer": "echo",
+      "clue": "Clue 2: Lampreia",
+      "image": "keyboard.png"
+    },
+    {
+      "question": "What runs but never walks?",
+      "answer": "river",
+      "clue": "Clue 3: Ozempic",
+      "image": "keyboard.png"
+    },
+    {
+      "question": "What flows but never walks?",
+      "answer": "river",
+      "clue": "Clue 4: Coração",
+      "image": "keyboard.png"
+    },
+    {
+      "question": "The more you take, the more you leave behind. What are they?",
+      "answer": "footsteps",
+      "clue": "Clue 5: Ritalina",
+      "image": "keyboard.png"
+    },
+    {
+      "question": "I have cities but no houses, rivers but no water. What am I?",
+      "answer": "map",
+      "clue": "Clue 6: Sirene",
+      "image": "keyboard.png"
+    }
+  ]
+}
